@@ -25,11 +25,7 @@ using std::pair;
 using std::make_pair;
 
 
-
 namespace ariel{
-
-
-
 
     int ariel::Algorithms::isConnected(ariel::Graph &graph) {
         const vector<vector<int>>& adjMatrix = graph.getAdjMatrix();
@@ -74,7 +70,6 @@ namespace ariel{
         distance[source] = 0;
 
 
-        // Relax edges repeatedly
         for (int i = 0; i < num_of_vertices - 1; ++i) {
             for (int u = 0; u < num_of_vertices; ++u) {
                 for (int v = 0; v < num_of_vertices; ++v) {
@@ -90,7 +85,6 @@ namespace ariel{
             }
         }
 
-        // Check for negative cycles
         for (int u = 0; u < num_of_vertices; ++u) {
             for (int v = 0; v < num_of_vertices; ++v) {
                 if (adjMatrix[u][v] != 0 && distance[u] != std::numeric_limits<int>::max() && distance[u] + adjMatrix[u][v] < distance[v]) {
@@ -141,9 +135,7 @@ namespace ariel{
             result += std::to_string(vertex);
             first_vertex = false;
         }
-//        if (!setA.empty()) {
-//            result.pop_back(); // Remove the last comma
-//        }
+
         first_vertex = true;
         result += "}, B={";
         for (int vertex : setB) {
@@ -191,7 +183,6 @@ namespace ariel{
             }
         }
 
-        // Construct sets A and B based on the coloring
         std::unordered_set<int> setA, setB;
         for (const auto& pair : colorMap) {
             if (pair.second == "A") {
@@ -200,8 +191,6 @@ namespace ariel{
                 setB.insert(pair.first);
             }
         }
-
-        // Construct the output string
         string result = ConstructSets(setA, setB);
 
         return result;
@@ -232,15 +221,6 @@ namespace ariel{
                             parents[w] = v;
                         } else if (w != father) {
                             return true;
-//                            result.push(w);
-//                            int current = v;
-//                            while (current != w) {
-//                                result.push(current);
-//                                current = parents[current];
-//                            }
-//                            result.push(w);
-//                            //result.push(v); // to complete the cycle
-//                            return constructCycle(result).str();
                         }
                     }
                 }
@@ -270,67 +250,13 @@ namespace ariel{
         return oss;
     }
 
-    
-
-    // bool Algorithms::negativeCycle(const Graph& graph){
-    //     auto adjMatrix = graph.getAdjMatrix();
-    //     stack<pair<int, int>> v_stack;
-    //     v_stack.emplace(0, -1);
-    //     size_t vertices = adjMatrix.size();
-    //     vector<bool> visited(vertices, false);
-    //     vector<int> parents(vertices, -1);
-    //     stack<int> result;
-
-    //     while (!v_stack.empty()) {
-    //         int v = v_stack.top().first;
-    //         int father = v_stack.top().second;
-    //         v_stack.pop();
-
-    //         if (!visited[v]) {
-    //             visited[v] = true;
-    //             auto& edges = adjMatrix[v];
-
-    //             for (int w = 0; w < (int)edges.size(); ++w) {
-    //                 if (edges[w] != 0) {
-    //                     if (!visited[w]) {
-    //                         v_stack.emplace(w, v);
-    //                         parents[w] = v;
-    //                     } else if (w != father) {
-    //                         result.push(w);
-    //                         int current = v;
-    //                         while (current != w) {
-    //                            result.push(current);
-    //                            current = parents[current];
-    //                        }
-    //                        result.push(w);
-    //                        //result.push(v); 
-    //                         int sumEdges = 0;
-    //                         while (!result.empty()){
-    //                             int x = result.top();
-    //                             result.pop();
-    //                             if(!result.empty()){
-    //                                 int y = result.top();
-    //                                 sumEdges += adjMatrix[x][y];
-    //                             }
-                                
-    //                        }
-    //                        return sumEdges < 0 ? true : false;
-                           
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     return false;
-    // }
 
     bool Algorithms::negativeCycle(const Graph& graph){
     auto adjMatrix = graph.getAdjMatrix();
     int vertices = (int)adjMatrix.size();
     vector<int> distances(vertices, std::numeric_limits<int>::max());
-    distances[0] = 0; // Start vertex
+    distances[0] = 0; 
     
-    // Relax edges repeatedly
     for (int i = 0; i < vertices - 1; ++i) {
         for (int u = 0; u < vertices; ++u) {
             for (int v = 0; v < vertices; ++v) {
@@ -341,17 +267,16 @@ namespace ariel{
         }
     }
     
-    // Check for negative cycles
+   
     for (int u = 0; u < vertices; ++u) {
         for (int v = 0; v < vertices; ++v) {
             if (adjMatrix[u][v] != 0 && distances[u] != std::numeric_limits<int>::max() && distances[u] + adjMatrix[u][v] < distances[v]) {
-                return true; // Negative cycle found
+                return true; 
             }
         }
     }
     
-    return false; // No negative cycle found
+    return false; 
 }
 
 }
-
