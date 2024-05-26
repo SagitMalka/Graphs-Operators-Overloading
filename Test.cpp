@@ -5,7 +5,7 @@
 #include "Algorithms.hpp"
 #include "Graph.hpp"
 #include <iostream>
-
+#include <sstream>
 using namespace std;
 
 #include "Graph.hpp"
@@ -15,424 +15,985 @@ using namespace std;
 using namespace ariel;
 using namespace std;
 
-TEST_CASE("Test isConnected with simple connected graph")
-{
-    Graph g;
-    vector<vector<int>> graph = {
-        {0, 1, 0},
-        {1, 0, 1},
-        {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isConnected(g) == true);
-}
 
-TEST_CASE("Test isConnected with simple disconnected graph")
-{
-    Graph g;
-    vector<vector<int>> graph = {
-        {0, 0, 0},
-        {0, 0, 1},
-        {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isConnected(g) == false);
-}
-
-TEST_CASE("Test isConnected with single node graph")
-{
-    Graph g;
-    vector<vector<int>> graph = {
-        {0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isConnected(g) == true);
-}
-
-TEST_CASE("Test isConnected with fully connected graph")
-{
-    Graph g;
-    vector<vector<int>> graph = {
-        {0, 1, 1},
-        {1, 0, 1},
-        {1, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isConnected(g) == true);
-}
-
-TEST_CASE("Test isConnected with large connected graph")
-{
-    Graph g;
-    vector<vector<int>> graph = {
-        {0, 1, 0, 0, 1},
-        {1, 0, 1, 0, 0},
-        {0, 1, 0, 1, 0},
-        {0, 0, 1, 0, 1},
-        {1, 0, 0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isConnected(g) == true);
-}
-
-TEST_CASE("Test isConnected with large disconnected graph")
-{
-    Graph g;
-    vector<vector<int>> graph = {
-        {0, 1, 0, 0, 0},
-        {1, 0, 1, 0, 0},
-        {0, 1, 0, 1, 0},
-        {0, 0, 1, 0, 0},
-        {0, 0, 0, 0, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isConnected(g) == false);
-}
-
-TEST_CASE("Test isConnected with graph having isolated nodes")
-{
-    Graph g;
-    vector<vector<int>> graph = {
-        {0, 1, 0, 0},
-        {1, 0, 0, 0},
-        {0, 0, 0, 1},
-        {0, 0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isConnected(g) == false);
-}
-
-TEST_CASE("Test isConnected with cycle graph")
-{
-    Graph g;
-    vector<vector<int>> graph = {
-        {0, 1, 0, 1},
-        {1, 0, 1, 0},
-        {0, 1, 0, 1},
-        {1, 0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isConnected(g) == true);
-}
-
-TEST_CASE("Test isConnected with line graph")
-{
-    Graph g;
-    vector<vector<int>> graph = {
-        {0, 1, 0, 0},
-        {1, 0, 1, 0},
-        {0, 1, 0, 1},
-        {0, 0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isConnected(g) == true);
-}
-
-
-TEST_CASE("Test isConnected")
-{
-    ariel::Graph g;
-    vector<vector<int>> graph = {
-        {0, 1, 0},
-        {1, 0, 1},
-        {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(ariel::Algorithms::isConnected(g) == true);
+TEST_CASE("Test operator++ (prefix)") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    ++g1;
 
     vector<vector<int>> graph2 = {
-        {0, 1, 1, 0, 0},
-        {1, 0, 1, 0, 0},
-        {1, 1, 0, 1, 0},
-        {0, 0, 1, 0, 0},
-        {0, 0, 0, 0, 0}};
-    g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::isConnected(g) == false);
-}
-
-TEST_CASE("Test shortestPath")
-{
-    ariel::Graph g;
-    vector<vector<int>> graph = {
-        {0, 1, 0},
-        {1, 0, 1},
-        {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(ariel::Algorithms::shortestPath(g, 0, 2) == "0->1->2");
-
-    vector<vector<int>> graph2 = {
-        {0, 1, 1, 0, 0},
-        {1, 0, 1, 0, 0},
-        {1, 1, 0, 1, 0},
-        {0, 0, 1, 0, 0},
-        {0, 0, 0, 0, 0}};
-    g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::shortestPath(g, 0, 4) == "-1");
-}
-TEST_CASE("Test shortestPath with simple graph")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, 1, 0, 0},
-        {0, 0, 1, 0},
-        {0, 0, 0, 1},
-        {0, 0, 0, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::shortestPath(g, 0, 3) == "0->1->2->3");
-}
-
-TEST_CASE("Test shortestPath with disconnected graph")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, 1, 0, 0},
-        {0, 0, 0, 0},
-        {0, 0, 0, 0},
-        {0, 0, 0, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::shortestPath(g, 0, 3) == "-1");
-}
-
-TEST_CASE("Test shortestPath with invalid source or destination")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, 1, 0, 0},
-        {0, 0, 1, 0},
-        {0, 0, 0, 1},
-        {0, 0, 0, 0}};
-    g.loadGraph(graph);
-    CHECK_THROWS(Algorithms::shortestPath(g, 0, 5) == "Invalid source or destination");
-}
-
-TEST_CASE("Test shortestPath with negative edge weights")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, 1, -1, 0},
-        {0, 0, 1, 0},
-        {0, 0, 0, 1},
-        {0, 0, 0, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::shortestPath(g, 0, 3) == "0->2->3");
-}
-
-
-TEST_CASE("Test isContainsCycle with acyclic graph")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, 1, 0},
-        {0, 0, 1},
-        {0, 0, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isContainsCycle(g) == false);
-}
-
-TEST_CASE("Test isContainsCycle with cyclic graph")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, 1, 0},
-        {0, 0, 1},
-        {1, 0, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isContainsCycle(g) == true);
-}
-
-TEST_CASE("Test isContainsCycle with self-loop")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, 1, 0},
-        {0, 0, 0},
-        {0, 0, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isContainsCycle(g) == false);
-}
-
-TEST_CASE("Test isContainsCycle with multiple cycles")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, 1, 0, 0},
-        {0, 0, 1, 0},
-        {1, 0, 0, 1},
-        {0, 0, 0, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isContainsCycle(g) == true);
-}
-
-TEST_CASE("Test isContainsCycle with disconnected graph")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, 1, 0, 0},
-        {1, 0, 0, 0},
-        {0, 0, 0, 1},
-        {0, 0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isContainsCycle(g) == false);
-}
-
-TEST_CASE("Test isContainsCycle with single node graph")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isContainsCycle(g) == false);
-}
-
-TEST_CASE("Test isBipartite")
-{
-    ariel::Graph g;
-    vector<vector<int>> graph = {
-        {0, 1, 0},
-        {1, 0, 1},
-        {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is bipartite: A={0, 2}, B={1}");
-
-    vector<vector<int>> graph2 = {
-        {0, 1, 1, 0, 0},
-        {1, 0, 1, 0, 0},
-        {1, 1, 0, 1, 0},
-        {0, 0, 1, 0, 0},
-        {0, 0, 0, 0, 0}};
-    g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
-
-    vector<vector<int>> graph3 = {
-        {0, 1, 2, 0, 0},
-        {1, 0, 3, 0, 0},
-        {2, 3, 0, 4, 0},
-        {0, 0, 4, 0, 5},
-        {0, 0, 0, 5, 0}};
-    g.loadGraph(graph3);
-    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
-
-    vector<vector<int>> graph4 = {
-        {0, 1, 0, 0, 0, 0},
-        {1, 0, 0, 0, 0, 0},
-        {0, 0, 0, 1, 0, 0},
-        {0, 0, 1, 0, 0, 0},
-        {0, 0, 0, 0, 0, 1},
-        {0, 0, 0, 0, 1, 0}};
-    g.loadGraph(graph4);
-    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is bipartite: A={0, 2, 4}, B={1, 3, 5}");
-}
-TEST_CASE("Test isBipartite with non-bipartite graph")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, 1, 1},
-        {1, 0, 1},
-        {1, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isBipartite(g) == "The graph is not bipartite.");
-}
-
-TEST_CASE("Test isBipartite with single node graph")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::isBipartite(g) == "The graph is bipartite: A={0}, B={}");
-}
-
-TEST_CASE("Test invalid graph")
-{
-    ariel::Graph g;
-    vector<vector<int>> graph = {
-        {0, 1, 2, 0},
-        {1, 0, 3, 0},
-        {2, 3, 0, 4},
-        {0, 0, 4, 0},
-        {0, 0, 0, 5}};
-    CHECK_THROWS(g.loadGraph(graph));
-}
+        {1, 2, 3},
+        {2, 1, 4},
+        {3, 4, 1}
+    };
+    g2.loadGraph(graph2);
     
-TEST_CASE("Test negativeCycle with graph without negative cycle")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, -1, 2, 0},
-        {0, 0, 0, 0},
-        {0, 1, 0, 0},
-        {0, 0, -3, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::negativeCycle(g) == false);
+    CHECK(g2.getAdjMatrix() == g1.getAdjMatrix());
+}
+TEST_CASE("Test operator++ (suffix)") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    g1++;
+
+    vector<vector<int>> graph2 = {
+        {1, 2, 3},
+        {2, 1, 4},
+        {3, 4, 1}
+    };
+    g2.loadGraph(graph2);
+    
+    CHECK(g2.getAdjMatrix() == g1.getAdjMatrix());
 }
 
-TEST_CASE("Test negativeCycle with graph containing negative cycle")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, -1, 2, 0},
-        {0, 0, 0, 0},
-        {0, 1, 0, -1},
-        {0, 0, -3, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::negativeCycle(g) == true);
+TEST_CASE("Test operator+= with non-empty graph") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+
+    int value = 1;
+    g1 += value;
+
+    vector<vector<int>> graph2 = {
+        {1, 2, 3,},
+        {2, 1, 4},
+        {3, 4, 1}
+    };
+    g2.loadGraph(graph2);
+    
+    CHECK(g2.getAdjMatrix() == g1.getAdjMatrix());
 }
 
-TEST_CASE("Test negativeCycle with graph containing negative self-loop")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, -1, 2, 0},
-        {0, 0, 0, 0},
-        {0, 1, -2, 0},
-        {0, 0, -3, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::negativeCycle(g) == true);
+
+TEST_CASE("Test operator+= with single node graph") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0}
+    };
+    g1.loadGraph(graph1);
+
+    g1 += 3;
+    vector<vector<int>> graph2 = {
+        {3}
+    };
+    g2.loadGraph(graph2);
+    CHECK(g1.getAdjMatrix() == g2.getAdjMatrix());
 }
 
 
-TEST_CASE("Test negativeCycle with disconnected graph")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, -1, 2, 0},
-        {0, 0, 0, 0},
-        {0, 0, 0, 0},
-        {0, 0, 0, 0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::negativeCycle(g) == false);
+TEST_CASE("Test operator+") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 1},
+        {1, 0, 1},
+        {1, 1, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    Graph result = g1 + g2;
+    vector<vector<int>> expected = {
+        {0, 2, 3},
+        {2, 0, 4},
+        {3, 4, 0}
+    };
+    CHECK(result.getAdjMatrix() == expected);
 }
 
-TEST_CASE("Test negativeCycle with single node graph")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0}};
-    g.loadGraph(graph);
-    CHECK(Algorithms::negativeCycle(g) == false);
+TEST_CASE("Test operator+ with different sized graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1},
+        {1, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    CHECK_THROWS_AS(g1 + g2, std::invalid_argument); // Expect an exception due to different sizes
 }
 
-TEST_CASE("Test loadGraph with valid square matrix")
-{
+TEST_CASE("Test operator+= with identical graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph);
+    g2.loadGraph(graph);
+
+    g1 += g2;
+    vector<vector<int>> expected = {
+        {0, 2, 4},
+        {2, 0, 6},
+        {4, 6, 0}
+    };
+    CHECK(g1.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator+= with different graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 3, 4},
+        {3, 0, 5},
+        {4, 5, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    g1 += g2;
+    vector<vector<int>> expected = {
+        {0, 4, 6},
+        {4, 0, 8},
+        {6, 8, 0}
+    };
+    CHECK(g1.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator+= with graph having different sizes") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1},
+        {1, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    CHECK_THROWS_AS(g1 += g2, std::invalid_argument);
+}
+
+TEST_CASE("Test operator+= with one empty graph and one non-empty graph") {
+    Graph g1, g2;
+    vector<vector<int>> graph = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph);
+
+    CHECK_THROWS_AS(g1 += g2, std::invalid_argument);
+}
+
+TEST_CASE("Test operator+= with both graphs empty") {
+    Graph g1, g2;
+
+    CHECK_NOTHROW(g1 += g2);
+    vector<vector<int>> expected = {};
+    CHECK(g1.getAdjMatrix() == expected);
+}
+///////////////////////////////////////
+TEST_CASE("Test operator-- (prefix)") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    --g1;
+
+    vector<vector<int>> graph2 = {
+        {-1, 0, 1,},
+        {0, -1, 2},
+        {1, 2, -1}
+    };
+    g2.loadGraph(graph2);
+    
+    CHECK(g2.getAdjMatrix() == g1.getAdjMatrix());
+}
+TEST_CASE("Test operator-- (suffix)") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    g1--;
+
+    vector<vector<int>> graph2 = {
+        {-1, 0, 1,},
+        {0, -1, 2},
+        {1, 2, -1}
+    };
+    g2.loadGraph(graph2);
+    
+    CHECK(g2.getAdjMatrix() == g1.getAdjMatrix());
+}
+TEST_CASE("Test operator- with non-empty graph") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+
+    int value = 1;
+    g1 = g1 - value;
+
+    vector<vector<int>> graph2 = {
+        {-1, 0, 1,},
+        {0, -1, 2},
+        {1, 2, -1}
+    };
+    g2.loadGraph(graph2);
+    
+    CHECK(g2.getAdjMatrix() == g1.getAdjMatrix());
+}
+
+TEST_CASE("Test operator-= with non-empty graph") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+
+    int value = 1;
+    g1 -= value;
+
+    vector<vector<int>> graph2 = {
+        {-1, 0, 1,},
+        {0, -1, 2},
+        {1, 2, -1}
+    };
+    g2.loadGraph(graph2);
+    
+    CHECK(g2.getAdjMatrix() == g1.getAdjMatrix());
+}
+
+
+TEST_CASE("Test operator-= with single node graph") {
     Graph g;
-    std::vector<std::vector<int>> graph = {
+    vector<vector<int>> graph = {
+        {0}
+    };
+    g.loadGraph(graph);
+
+    Graph g_copy = g;
+    int value = 3;
+    g -= value;
+    for (size_t i = 0; i < graph.size(); ++i) {
+        for (size_t j = 0; j < graph[i].size(); ++j) {
+            graph[i][j] -= value;
+        }
+    }
+    CHECK(g.getAdjMatrix() == graph);
+}
+
+
+TEST_CASE("Test operator- with graph subtraction") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 1},
+        {1, 0, 1},
+        {1, 1, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    Graph result = g1 - g2;
+    vector<vector<int>> expected = {
+        {0, 0, 1},
+        {0, 0, 2},
+        {1, 2, 0}
+    };
+    CHECK(result.getAdjMatrix() == expected); // Expect the subtracted graph
+}
+
+TEST_CASE("Test operator- with different sized graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1},
+        {1, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    CHECK_THROWS_AS(g1 - g2, std::invalid_argument); // Expect an exception due to different sizes
+}
+
+TEST_CASE("Test operator-= with identical graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph);
+    g2.loadGraph(graph);
+
+    g1 -= g2;
+    vector<vector<int>> expected = {
+        {0, 0, 0},
+        {0, 0, 0},
+        {0, 0, 0}
+    };
+    CHECK(g1.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator-= with different graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 3, 4},
+        {3, 0, 5},
+        {4, 5, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    g1 -= g2;
+    vector<vector<int>> expected = {
+        {0, 2, 2},
+        {2, 0, 2},
+        {2, 2, 0}
+    };
+    CHECK(g1.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator-= with graph having different sizes") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1},
+        {1, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    CHECK_THROWS_AS(g1 -= g2, std::invalid_argument);
+}
+
+TEST_CASE("Test operator-= with one empty graph and one non-empty graph") {
+    Graph g1, g2;
+    vector<vector<int>> graph = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph);
+
+    CHECK_THROWS_AS(g1 -= g2, std::invalid_argument);
+}
+
+TEST_CASE("Test operator-= with both graphs empty") {
+    Graph g1, g2;
+
+    CHECK_NOTHROW(g1 -= g2);
+    vector<vector<int>> expected = {};
+    CHECK(g1.getAdjMatrix() == expected);
+}
+TEST_CASE("Test operator> with graphs having different number of edges") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
         {0, 1, 0},
         {1, 0, 1},
-        {0, 1, 0}};
-    CHECK_NOTHROW(g.loadGraph(graph));
+        {0, 1, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 1},
+        {1, 0, 1},
+        {1, 1, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    CHECK(g2 > g1); // g2 has more edges than g1
 }
 
-TEST_CASE("Test loadGraph with valid non-square matrix")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {
+TEST_CASE("Test operator< with graphs having different number of edges") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
         {0, 1, 0},
         {1, 0, 1},
+        {0, 1, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 1},
+        {1, 0, 1},
+        {1, 1, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    CHECK(g1 < g2); // g1 has fewer edges than g2
+}
+
+TEST_CASE("Test operator>= with identical graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph = {
         {0, 1, 0},
-        {0, 0, 0}}; // Non-square matrix
-    CHECK_THROWS_AS(g.loadGraph(graph), std::invalid_argument);
+        {1, 0, 1},
+        {0, 1, 0}
+    };
+    g1.loadGraph(graph);
+    g2.loadGraph(graph);
+
+    CHECK(g1 >= g2); // g1 and g2 are identical
 }
 
-TEST_CASE("Test loadGraph with empty matrix")
-{
-    Graph g;
-    std::vector<std::vector<int>> graph = {};
-    CHECK_THROWS_AS(g.loadGraph(graph), std::invalid_argument);
+TEST_CASE("Test operator<= with identical graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}
+    };
+    g1.loadGraph(graph);
+    g2.loadGraph(graph);
+
+    CHECK(g1 <= g2); // g1 and g2 are identical
 }
 
-TEST_CASE("Test loadGraph with empty graph")
-{
+TEST_CASE("Test operator>= with graphs having different number of edges") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 1},
+        {1, 0, 1},
+        {1, 1, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    CHECK(g2 >= g1); // g2 has more edges than g1
+}
+
+TEST_CASE("Test operator<= with graphs having different number of edges") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 1},
+        {1, 0, 1},
+        {1, 1, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    CHECK(g1 <= g2); // g1 has fewer edges than g2
+}
+
+TEST_CASE("Test operator== with identical graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph);
+    g2.loadGraph(graph);
+
+    CHECK(g1 == g2); // Expect true since graphs are identical
+}
+
+TEST_CASE("Test operator== with different graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 2},
+        {1, 0, 4}, // Different value here
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    CHECK_FALSE(g1 == g2); // Expect false since graphs are different
+}
+
+TEST_CASE("Test operator== with different sized graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1},
+        {1, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    CHECK_FALSE(g1 == g2); // Expect false since graphs have different sizes
+}
+
+
+TEST_CASE("Test operator== with both graphs empty") {
+    Graph g1, g2;
+
+    CHECK(g1 == g2); // Expect true since both graphs are empty
+}
+TEST_CASE("Test operator!= with identical graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph);
+    g2.loadGraph(graph);
+
+    CHECK_FALSE(g1 != g2); // Expect false since graphs are identical
+}
+
+TEST_CASE("Test operator!= with different graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 2},
+        {1, 0, 4}, // Different value here
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    CHECK(g1 != g2); // Expect true since graphs are different
+}
+
+TEST_CASE("Test operator!= with different sized graphs") {
+    Graph g1, g2;
+    vector<vector<int>> graph1 = {
+        {0, 1},
+        {1, 0}
+    };
+    vector<vector<int>> graph2 = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g1.loadGraph(graph1);
+    g2.loadGraph(graph2);
+
+    CHECK(g1 != g2); // Expect true since graphs have different sizes
+}
+
+
+TEST_CASE("Test operator!= with both graphs empty") {
+    Graph g1, g2;
+
+    CHECK_FALSE(g1 != g2); // Expect false since both graphs are empty
+}
+TEST_CASE("Test operator* with valid non-empty graphs") {
+    Graph g1;
+    vector<vector<int>> graph1 = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+    g1.loadGraph(graph1);
+
+    Graph g2;
+    vector<vector<int>> graph2 = {
+        {9, 8, 7},
+        {6, 5, 4},
+        {3, 2, 1}
+    };
+    g2.loadGraph(graph2);
+
+    Graph result = g1 * g2;
+
+    vector<vector<int>> expected = {
+        {30, 24, 18},
+        {84, 69, 54},
+        {138, 114, 90}
+    };
+
+    CHECK(result.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator* with zero matrices") {
+    Graph g1;
+    vector<vector<int>> graph1 = {
+        {0, 0, 0},
+        {0, 0, 0},
+        {0, 0, 0}
+    };
+    g1.loadGraph(graph1);
+
+    Graph g2;
+    vector<vector<int>> graph2 = {
+        {0, 0, 0},
+        {0, 0, 0},
+        {0, 0, 0}
+    };
+    g2.loadGraph(graph2);
+
+    Graph result = g1 * g2;
+
+    vector<vector<int>> expected = {
+        {0, 0, 0},
+        {0, 0, 0},
+        {0, 0, 0}
+    };
+
+    CHECK(result.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator* with identity matrix") {
+    Graph g1;
+    vector<vector<int>> graph1 = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+    g1.loadGraph(graph1);
+
+    Graph g2;
+    vector<vector<int>> graph2 = {
+        {1, 0, 0},
+        {0, 1, 0},
+        {0, 0, 1}
+    };
+    g2.loadGraph(graph2);
+
+    Graph result = g1 * g2;
+
+    vector<vector<int>> expected = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+
+    CHECK(result.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator* with graphs having negative values") {
+    Graph g1;
+    vector<vector<int>> graph1 = {
+        {1, -2, 3},
+        {-4, 5, -6},
+        {7, -8, 9}
+    };
+    g1.loadGraph(graph1);
+
+    Graph g2;
+    vector<vector<int>> graph2 = {
+        {9, -8, 7},
+        {-6, 5, -4},
+        {3, -2, 1}
+    };
+    g2.loadGraph(graph2);
+
+    Graph result = g1 * g2;
+
+    vector<vector<int>> expected = {
+        {30, -24, 18},
+        {-84, 69, -54},
+        {138, -114, 90}
+    };
+
+    CHECK(result.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator* with single node graphs") {
+    Graph g1;
+    vector<vector<int>> graph1 = {
+        {5}
+    };
+    g1.loadGraph(graph1);
+
+    Graph g2;
+    vector<vector<int>> graph2 = {
+        {3}
+    };
+    g2.loadGraph(graph2);
+
+    Graph result = g1 * g2;
+
+    vector<vector<int>> expected = {
+        {15}
+    };
+
+    CHECK(result.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator* with graphs of different sizes") {
+    Graph g1;
+    vector<vector<int>> graph1 = {
+        {1, 2},
+        {3, 4}
+    };
+    g1.loadGraph(graph1);
+
+    Graph g2;
+    vector<vector<int>> graph2 = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+    CHECK_THROWS_AS(g1 * g2, std::invalid_argument);
+}
+
+TEST_CASE("Test operator+ with non-empty graph") {
     Graph g;
-    std::vector<std::vector<int>> graph = {{}};
+    vector<vector<int>> graph = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}
+    };
+    g.loadGraph(graph);
+
+    Graph g_copy = g;
+    +g;
+    CHECK(g.getAdjMatrix() == g_copy.getAdjMatrix());
+}
+
+TEST_CASE("Test operator+ with graph having zeroes") {
+    Graph g;
+    vector<vector<int>> graph = {
+        {0, 0, 0},
+        {0, 0, 0},
+        {0, 0, 0}
+    };
+    g.loadGraph(graph);
+
+    Graph g_copy = g;
+    +g;
+    CHECK(g.getAdjMatrix() == g_copy.getAdjMatrix());
+}
+
+TEST_CASE("Test operator+ with graph having negative values") {
+    Graph g;
+    vector<vector<int>> graph = {
+        {0, -1, 2},
+        {-1, 0, -3},
+        {2, -3, 0}
+    };
+    g.loadGraph(graph);
+
+    Graph g_copy = g;
+    +g;
+    CHECK(g.getAdjMatrix() == g_copy.getAdjMatrix());
+}
+
+TEST_CASE("Test operator+ with single node graph") {
+    Graph g;
+    vector<vector<int>> graph = {
+        {0}
+    };
+    g.loadGraph(graph);
+
+    Graph g_copy = g;
+    +g;
+    CHECK(g.getAdjMatrix() == g_copy.getAdjMatrix());
+}
+
+TEST_CASE("Test operator+ with empty graph") {
+    Graph g;
+    vector<vector<int>> graph = {};
+
+    Graph g_copy = g;
+    +g;
+    CHECK(g.getAdjMatrix() == g_copy.getAdjMatrix());
+}
+TEST_CASE("Test operator- with empty graph") {
+    Graph g;
+    vector<vector<int>> graph = {};
+    CHECK_NOTHROW(g = -g);
+    CHECK(g.getAdjMatrix().empty());
+}
+
+TEST_CASE("Test operator- with graph of all positive elements") {
+    Graph g;
+    vector<vector<int>> graph = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+    g.loadGraph(graph);
+    g = -g;
+    vector<vector<int>> expected = {
+        {-1, -2, -3},
+        {-4, -5, -6},
+        {-7, -8, -9}
+    };
+    CHECK(g.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator- with graph of all negative elements") {
+    Graph g;
+    vector<vector<int>> graph = {
+        {-1, -2, -3},
+        {-4, -5, -6},
+        {-7, -8, -9}
+    };
+    g.loadGraph(graph);
+    g = -g;
+    vector<vector<int>> expected = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+    CHECK(g.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator- with graph of mixed elements") {
+    Graph g;
+    vector<vector<int>> graph = {
+        {1, -2, 3},
+        {-4, 5, -6},
+        {7, -8, 9}
+    };
+    g.loadGraph(graph);
+    g = -g;
+    vector<vector<int>> expected = {
+        {-1, 2, -3},
+        {4, -5, 6},
+        {-7, 8, -9}
+    };
+    CHECK(g.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator- with graph of zeros") {
+    Graph g;
+    vector<vector<int>> graph = {
+        {0, 0, 0},
+        {0, 0, 0},
+        {0, 0, 0}
+    };
+    g.loadGraph(graph);
+    g = -g;
+    vector<vector<int>> expected = {
+        {0, 0, 0},
+        {0, 0, 0},
+        {0, 0, 0}
+    };
+    CHECK(g.getAdjMatrix() == expected);
+}
+
+TEST_CASE("Test operator<< with a simple graph") {
+    Graph g;
+    vector<vector<int>> graph = {
+        {0, 0, 6},
+        {3, 0, 0},
+        {0, 2, 0}
+    };
+    g.loadGraph(graph);
+    
+    std::ostringstream oss;
+    oss << g;
+    std::string expected_output = "[0, 0, 6]\n[3, 0, 0]\n[0, 2, 0]\n";
+    
+    CHECK(oss.str() == expected_output);
+}
+
+TEST_CASE("Test operator<< with an empty graph") {
+    Graph g;
+    vector<vector<int>> graph = {};
+    
+    std::ostringstream oss;
+    oss << g;
+    std::string expected_output = "";
+    
+    CHECK(oss.str() == expected_output);
+}
+
+TEST_CASE("Test operator<< with a larger graph") {
+    Graph g;
+    vector<vector<int>> graph = {
+        {0, 1, 2, 3},
+        {4, 0, 5, 6},
+        {7, 8, 0, 9},
+        {10, 11, 12, 0}
+    };
+    g.loadGraph(graph);
+    
+    std::ostringstream oss;
+    oss << g;
+    std::string expected_output = "[0, 1, 2, 3]\n[4, 0, 5, 6]\n[7, 8, 0, 9]\n[10, 11, 12, 0]\n";
+    
+    CHECK(oss.str() == expected_output);
+}
+
+TEST_CASE("Test operator<< with a single element graph") {
+    Graph g;
+    vector<vector<int>> graph = {
+        {42}
+    };
+    g.loadGraph(graph);
+    
+    std::ostringstream oss;
+    oss << g;
+    std::string expected_output = "[42]\n";
+    
+    CHECK(oss.str() == expected_output);
+}
+
+TEST_CASE("Test operator<< with a non-square graph (should throw)") {
+    Graph g;
+    vector<vector<int>> graph = {
+        {1, 2, 3},
+        {4, 5}
+    };
     CHECK_THROWS_AS(g.loadGraph(graph), std::invalid_argument);
 }

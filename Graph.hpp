@@ -9,10 +9,7 @@
 
 using std::vector;
 using std::ostream;
-/**
- * TO DO:
- * fix > and create all other
- * */
+
 namespace ariel{
     class Graph {
     private:
@@ -20,7 +17,7 @@ namespace ariel{
         [[nodiscard]] static int countEdges(const vector<vector<int>>& matrix) ;
         /** returns -1 if first < second, 1 if first > second, 0 if equal **/
         [[nodiscard]] int compareMatrixSize(const Graph& other) const;
-        [[nodiscard]] bool findCommonElement(const Graph& other) const;
+    
     public:
 
         void loadGraph(const vector<vector<int>>& matrix);

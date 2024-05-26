@@ -79,18 +79,15 @@ namespace ariel {
     }
 
     Graph Graph::operator+(const Graph &other) const {
-        // Check row size
         if (m_matrix.size() != other.m_matrix.size()) {
             throw invalid_argument("Graphs must have the same dimensions to be added.");
         }
 
         Graph result = *this;
-        // Check column size
         for (size_t i = 0; i < m_matrix.size(); ++i) {
             if (m_matrix[i].size() != other.m_matrix[i].size()) {
                 throw invalid_argument("Graphs must have the same dimensions to be added.");
             }
-            // actual adding
             for (size_t j = 0; j < m_matrix[i].size(); ++j) {
                 result.m_matrix[i][j] += other.m_matrix[i][j];
             }
@@ -145,18 +142,15 @@ namespace ariel {
     }
 
     Graph Graph::operator-(const Graph &other) const {
-        // Check row size
         if (m_matrix.size() != other.m_matrix.size()) {
             throw invalid_argument("Graphs must have the same dimensions to be added.");
         }
 
         Graph result = *this;
-        // Check column size
         for (size_t i = 0; i < m_matrix.size(); ++i) {
             if (m_matrix[i].size() != other.m_matrix[i].size()) {
                 throw invalid_argument("Graphs must have the same dimensions to be added.");
             }
-            // actual adding
             for (size_t j = 0; j < m_matrix[i].size(); ++j) {
                 result.m_matrix[i][j] -= other.m_matrix[i][j];
             }
@@ -195,13 +189,11 @@ namespace ariel {
     bool Graph::operator>(const Graph &other) const {
         int comp_s = this->compareMatrixSize(other);
         if (comp_s == -1) {
-            std::cout << "198" << std::endl;
             return false;
         } else if (comp_s == 1) {
             for (size_t i = 0; i < m_matrix.size(); ++i) {
                 for (size_t j = 0; j < m_matrix[0].size(); ++j) {
                     if ((other.m_matrix[i][j] != 0) && (other.m_matrix[i][j] != m_matrix[i][j])) {
-                        std::cout << "204" << std::endl;
                         return false;
                     }
                 }
@@ -209,10 +201,8 @@ namespace ariel {
         } else {
             int edges_g1 = countEdges(m_matrix);
             int edges_g2 = countEdges(other.m_matrix);
-            std::cout << "212" << std::endl;
             return edges_g1 > edges_g2;
         }
-        std::cout << "215" << std::endl;
         return false;
     }
 
@@ -238,19 +228,6 @@ namespace ariel {
         }
     }
 
-    bool Graph::findCommonElement(const Graph &other) const {
-        bool contains = false;
-        for (size_t i = 0; i < other.m_matrix.size(); ++i) {
-            for (size_t j = 0; j < other.m_matrix.size(); ++j) {
-                if (m_matrix[i][j] != 0) {
-                    if (m_matrix[i][j] == other.m_matrix[i][j]) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
 
     Graph &Graph::operator*=(int scalar) {
         for (auto &row: m_matrix) {
@@ -261,23 +238,23 @@ namespace ariel {
         return *this;
     }
 
-
-    ostream &operator<<(ostream &os, const Graph &graph) {
-        for (size_t i = 0; i < graph.m_matrix.size(); i++) {
-            for (size_t j = 0; j < graph.m_matrix.size(); j++) {
-                if (j == 0) {
-                    os << "[" << graph.m_matrix[i][j];
-                } else if (j == graph.m_matrix.size() - 1) {
-                    os << ", " << graph.m_matrix[i][j] << "]";
-                } else {
-                    os << ", " << graph.m_matrix[i][j];
+    ostream& operator<<(ostream& os, const Graph& graph) {
+        if(graph.m_matrix.size() == 0){
+            os << "";
+            return os;
+        }
+        for (const auto& row : graph.m_matrix) {
+            os << "[";
+            for (size_t i = 0; i < row.size(); ++i) {
+                os << row[i];
+                if (i < row.size() - 1) {
+                    os << ", ";
                 }
             }
-            os << endl;
+            os << "]\n";
         }
         return os;
     }
-
     Graph &Graph::operator+() {
         return *this;
     }
@@ -327,7 +304,6 @@ namespace ariel {
 
         int edges_g1 = countEdges(m_matrix);
         int edges_g2 = countEdges(other.m_matrix);
-        std::cout << "343" << std::endl;
         return edges_g1 < edges_g2;
 
     }
